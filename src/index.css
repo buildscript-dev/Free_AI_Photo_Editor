@@ -107,6 +107,31 @@ input[type='range']::-webkit-slider-thumb {
   scrollbar-width: none;
 }
 
+/* film grain overlay (atmosphere) */
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.14;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* green duotone treatment for hero portrait */
+.duotone {
+  filter: grayscale(1) contrast(1.08) brightness(1.02);
+}
+
+/* magnetic-ish lift on primary actions */
+.lift {
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s;
+}
+.lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(165, 210, 58, 0.35);
+}
+
 /* utility buttons reused in editor */
 .btn-primary {
   background: #16181a;

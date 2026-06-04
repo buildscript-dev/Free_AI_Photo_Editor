@@ -4,6 +4,7 @@ import { Camera, ArrowUpRight, Mic, Menu, ArrowRight } from 'lucide-react'
 import { Gallery } from './Gallery'
 
 const SLIDER_ICONS = ['Exposure', 'Brightness', 'Brilliance', 'Highlights', 'Vignette', 'Noise']
+const SLIDER_GLYPH = ['±', '☀', '◐', '◑', '⬡', '◎']
 
 function scrollToEditor() {
   document.getElementById('editor')?.scrollIntoView({ behavior: 'smooth' })
@@ -15,110 +16,119 @@ export function Hero() {
   const [s2, setS2] = useState(64)
 
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
       tl.from('.hero-nav', { y: -20, opacity: 0, duration: 0.6 })
-        .from('.hero-line > span', { yPercent: 110, duration: 0.9, stagger: 0.12 }, '-=0.2')
-        .from('.hero-sub', { y: 20, opacity: 0, duration: 0.6 }, '-=0.4')
-        .from('.hero-demo', { scale: 0.8, opacity: 0, duration: 0.5 }, '-=0.4')
-        .from('.hero-gallery', { y: 30, opacity: 0, duration: 0.6 }, '-=0.3')
-        .from('.hero-img', { scale: 1.08, opacity: 0, duration: 1.1 }, 0.1)
-        .from('.hero-social', { x: -20, opacity: 0, duration: 0.6 }, '-=0.6')
-        .from('.hero-controls', { y: 30, opacity: 0, duration: 0.7 }, '-=0.5')
+        .from('.hero-line > span', { yPercent: 110, duration: 0.9, stagger: 0.1 }, '-=0.2')
+        .from('.hero-demo', { scale: 0.85, opacity: 0, duration: 0.5 }, '-=0.5')
+        .from('.hero-sub', { y: 18, opacity: 0, duration: 0.6, stagger: 0.08 }, '-=0.4')
+        .from('.hero-gallery', { y: 28, opacity: 0, duration: 0.6 }, '-=0.3')
+        .from('.hero-img', { scale: 1.08, duration: 1.2 }, 0.1)
+        .from('.hero-social', { x: -16, opacity: 0, duration: 0.6 }, '-=0.7')
+        .from('.hero-controls', { y: 28, opacity: 0, duration: 0.7 }, '-=0.5')
     }, root)
     return () => ctx.revert()
   }, [])
 
   return (
-    <div ref={root} className="min-h-screen p-3 md:p-5">
-      <div className="grid gap-3 md:gap-5 lg:grid-cols-[minmax(0,46%)_1fr]">
+    <div ref={root} className="p-3 sm:p-4 lg:p-5">
+      <div className="grid gap-3 sm:gap-4 lg:grid-cols-[minmax(0,47%)_minmax(0,1fr)] lg:gap-5">
         {/* LEFT */}
-        <div className="card-soft flex flex-col justify-between gap-8 p-6 md:p-9">
+        <div className="card-soft flex min-w-0 flex-col justify-between gap-9 p-6 sm:p-8 lg:min-h-[calc(100vh-2.5rem)] lg:p-10">
           {/* nav */}
-          <nav className="hero-nav flex items-center justify-between">
+          <nav className="hero-nav flex items-center justify-between gap-3">
             <a href="#" className="flex items-center gap-2">
               <span className="grid grid-cols-3 gap-0.5">
                 {Array.from({ length: 9 }).map((_, i) => (
                   <span key={i} className="h-1.5 w-1.5 rounded-[2px] bg-ink" />
                 ))}
               </span>
-              <span className="font-display text-lg font-extrabold">Postly<span className="text-lime-deep">.</span>AI</span>
+              <span className="font-display text-lg font-extrabold tracking-tight">
+                Postly<span className="text-lime-deep">.</span>AI
+              </span>
             </a>
-            <div className="hidden items-center gap-5 text-sm font-medium text-ink-soft md:flex">
-              <a className="flex items-center gap-1 text-ink" href="#editor">
+            <div className="hidden items-center gap-5 text-sm font-medium text-ink-soft md:flex lg:hidden xl:flex">
+              <a className="flex items-center gap-1.5 text-ink" href="#editor">
                 <span className="h-1.5 w-1.5 rounded-full bg-lime-deep" /> Home
               </a>
-              <a href="#features" className="hover:text-ink">Guides</a>
-              <a href="#features" className="hover:text-ink">Tips</a>
+              <a href="#features" className="transition hover:text-ink">Guides</a>
+              <a href="#features" className="transition hover:text-ink">Tips</a>
             </div>
-            <button onClick={scrollToEditor} className="pill bg-ink text-white">
+            <button onClick={scrollToEditor} className="pill bg-ink text-white transition hover:bg-ink/90">
               Menu <Menu size={16} />
             </button>
           </nav>
 
           {/* headline */}
-          <div className="relative">
-            <button onClick={scrollToEditor} className="hero-demo pill mb-6 bg-paper text-ink shadow-sm">
-              <Camera size={16} /> WATCH DEMO
-            </button>
+          <div className="min-w-0">
+            <div className="hero-demo mb-7 flex items-center justify-between gap-3">
+              <button onClick={scrollToEditor} className="pill bg-paper text-ink transition hover:bg-sage">
+                <Camera size={16} /> WATCH DEMO
+              </button>
+              <span className="hidden items-center gap-2 text-sm text-ink-soft sm:flex">
+                <span className="grid h-11 w-11 place-items-center rounded-full bg-paper">
+                  <Mic size={17} />
+                </span>
+                <ArrowUpRight size={14} className="text-lime-deep" /> Our podcast
+              </span>
+            </div>
 
-            <h1 className="font-display text-[2.4rem] font-extrabold leading-[0.98] tracking-tight sm:text-[3.4rem] md:text-[4.6rem] lg:text-[4.4rem] xl:text-[5.2rem]">
+            <h1 className="font-display font-extrabold leading-[0.95] tracking-[-0.02em] text-[2.45rem] sm:text-[3.2rem] md:text-[4.2rem] lg:text-[3.5rem] xl:text-[4.3rem] 2xl:text-[5rem]">
               <span className="hero-line reveal-line"><span>AI editing</span></span>
               <span className="hero-line reveal-line"><span>made simple</span></span>
-              <span className="hero-line reveal-line flex items-baseline gap-2 md:gap-3">
-                <span>and</span>
-                <span className="relative inline-block rounded-xl border border-ink/30 px-2 text-ink-soft md:px-3">
-                  powerful
-                  <Corner className="-left-1 -top-1" />
-                  <Corner className="-right-1 -top-1" />
-                  <Corner className="-bottom-1 -left-1" />
-                  <Corner className="-bottom-1 -right-1" />
+              <span className="hero-line reveal-line">
+                <span className="whitespace-nowrap">
+                  and{' '}
+                  <span className="relative ml-1 inline-block rounded-xl border border-ink/25 px-2 text-ink-soft md:px-3">
+                    powerful
+                    <Corner className="-left-1 -top-1" />
+                    <Corner className="-right-1 -top-1" />
+                    <Corner className="-bottom-1 -left-1" />
+                    <Corner className="-bottom-1 -right-1" />
+                  </span>
                 </span>
               </span>
             </h1>
-
-            {/* podcast badge */}
-            <div className="absolute right-0 top-2 hidden items-center gap-2 md:flex">
-              <span className="grid h-12 w-12 place-items-center rounded-full bg-paper">
-                <Mic size={18} />
-              </span>
-              <span className="text-sm text-ink-soft">
-                <ArrowUpRight size={14} className="inline text-lime-deep" /> Our podcast
-              </span>
-            </div>
 
             <p className="hero-sub mt-6 max-w-md text-[15px] leading-relaxed text-ink-soft">
               From automatic enhancements and background removal to AI prompt transforms and
               social captions — Postly helps you achieve stunning results in seconds. 100% free.
             </p>
-            <button onClick={scrollToEditor} className="hero-sub btn-lime mt-5 inline-flex items-center gap-2">
+            <button
+              onClick={scrollToEditor}
+              className="hero-sub btn-lime lift mt-6 inline-flex items-center gap-2"
+            >
               Start editing — free <ArrowRight size={16} />
             </button>
           </div>
 
           {/* gallery */}
-          <div className="hero-gallery">
+          <div className="hero-gallery min-w-0">
             <Gallery />
           </div>
         </div>
 
         {/* RIGHT */}
-        <div className="relative min-h-[60vh] overflow-hidden rounded-3xl bg-sage lg:min-h-0">
+        <div className="grain relative min-h-[58vh] min-w-0 overflow-hidden rounded-3xl bg-sage-deep lg:min-h-[calc(100vh-2.5rem)]">
           <img
             src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=1100&q=80"
             alt="AI edited portrait"
-            className="hero-img absolute inset-0 h-full w-full object-cover [filter:grayscale(0.6)_contrast(1.05)]"
+            className="hero-img duotone absolute inset-0 h-full w-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-tr from-lime/55 via-sage/25 to-transparent mix-blend-multiply" />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-ink/30" />
+          {/* duotone layers: lift highlights to sage, push shadows to deep green */}
+          <div className="absolute inset-0 bg-sage mix-blend-screen opacity-55" />
+          <div className="absolute inset-0 bg-[#37511c] mix-blend-multiply opacity-55" />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink/35 via-transparent to-transparent" />
 
           {/* social pill */}
-          <div className="hero-social absolute left-4 top-1/2 flex -translate-y-1/2 flex-col gap-1 rounded-full bg-gradient-to-b from-lime to-sage-deep p-1.5 shadow-lg">
+          <div className="hero-social absolute left-3 top-1/2 flex -translate-y-1/2 flex-col gap-1 rounded-full bg-gradient-to-b from-lime to-sage-deep p-1.5 shadow-lg sm:left-4">
             {[FB, X, IG].map((Icon, i) => (
               <a
                 key={i}
                 href="#"
-                className="grid h-9 w-9 place-items-center rounded-full bg-white/85 text-ink transition hover:bg-white"
+                aria-label="social"
+                className="grid h-9 w-9 place-items-center rounded-full bg-white/85 text-ink transition hover:scale-105 hover:bg-white"
               >
                 <Icon size={16} />
               </a>
@@ -126,20 +136,25 @@ export function Hero() {
           </div>
 
           {/* editor controls overlay */}
-          <div className="hero-controls glass absolute bottom-3 left-3 right-3 rounded-2xl p-4 text-white">
-            <div className="mb-3 grid grid-cols-6 gap-1 text-center text-[10px] font-medium">
+          <div className="hero-controls glass absolute inset-x-3 bottom-3 rounded-2xl p-3 text-white sm:p-4">
+            <div className="mb-3 grid grid-cols-6 gap-1 text-center text-[9px] font-medium sm:text-[10px]">
               {SLIDER_ICONS.map((l, i) => (
                 <div key={l} className={`flex flex-col items-center gap-1 ${i === 5 ? 'text-lime' : ''}`}>
                   <span className={`grid h-7 w-7 place-items-center rounded-lg ${i === 5 ? 'bg-white text-ink' : 'bg-white/15'}`}>
-                    {['±', '☀', '◐', '◑', '⬡', '◎'][i]}
+                    {SLIDER_GLYPH[i]}
                   </span>
-                  {l}
+                  <span className="truncate">{l}</span>
                 </div>
               ))}
             </div>
             <input type="range" className="mb-2 w-full" value={s1} onChange={(e) => setS1(+e.target.value)} />
-            <input type="range" className="w-full accent-lime" value={s2} onChange={(e) => setS2(+e.target.value)}
-              style={{ background: `linear-gradient(90deg,#b8e04d ${s2}%, rgba(255,255,255,.3) ${s2}%)` }} />
+            <input
+              type="range"
+              className="w-full"
+              value={s2}
+              onChange={(e) => setS2(+e.target.value)}
+              style={{ background: `linear-gradient(90deg,#b8e04d ${s2}%, rgba(255,255,255,.3) ${s2}%)` }}
+            />
           </div>
         </div>
       </div>
