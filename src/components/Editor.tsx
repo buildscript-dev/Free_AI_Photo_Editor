@@ -355,8 +355,9 @@ export function Editor() {
             {tab === 'transform' && (
               <div className="space-y-4">
                 {!canEdit && (
-                  <p className="rounded-lg bg-amber-50 p-2 text-[11px] text-amber-700">
-                    Add a free HF_TOKEN to .env to enable AI transforms.
+                  <p className="rounded-lg bg-paper p-2 text-[11px] text-ink-soft">
+                    AI transform is warming up — try again shortly. Auto-enhance, looks and
+                    background removal work right now.
                   </p>
                 )}
                 {GUIDED.map((g) => (
