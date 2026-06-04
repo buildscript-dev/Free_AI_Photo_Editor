@@ -232,6 +232,11 @@ app.post('/api/caption', async (req, res) => {
   }
 })
 
-app.listen(PORT, () => {
-  console.log(`[postly-ai] proxy on :${PORT} — gemini ${ai ? 'on' : 'off'}, edit via ${EDIT_PROVIDER}`)
-})
+// Listen only for local dev. On Vercel (serverless) the app is exported instead.
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`[postly-ai] proxy on :${PORT} — gemini ${ai ? 'on' : 'off'}, edit via ${EDIT_PROVIDER}`)
+  })
+}
+
+export default app
