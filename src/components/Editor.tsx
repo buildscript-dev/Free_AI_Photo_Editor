@@ -52,6 +52,22 @@ const SIZES = [
   { id: 'x', label: 'X 16:9', ratio: 16 / 9 },
 ]
 
+// One-tap transforms — ready prompts, no typing needed.
+const QUICK = [
+  { emoji: '🎬', label: 'Cinematic', prompt: 'Apply a cinematic teal-and-orange colour grade with soft dramatic lighting. Keep the subject identical.' },
+  { emoji: '🌅', label: 'Golden hour', prompt: 'Relight with warm golden-hour sunlight and a soft glow. Keep the subject identical.' },
+  { emoji: '📸', label: 'Studio portrait', prompt: 'Studio portrait lighting — soft key light, clean professional look. Keep the subject identical.' },
+  { emoji: '🏖️', label: 'Beach background', prompt: 'Replace the background with a sunny beach at golden hour, naturally composited. Keep the subject identical.' },
+  { emoji: '⬜', label: 'White background', prompt: 'Replace the background with a clean seamless white studio backdrop. Keep the subject identical.' },
+]
+
+const STEPS = [
+  { n: 1, t: 'Upload', d: 'auto-enhances instantly' },
+  { n: 2, t: 'Enhance', d: 'looks & fine-tune' },
+  { n: 3, t: 'Transform', d: 'relight, restyle, change background' },
+  { n: 4, t: 'Caption & export', d: 'ready to post' },
+]
+
 export function Editor() {
   const [tab, setTab] = useState<Tab>('enhance')
   const [original, setOriginal] = useState<string | null>(null)
@@ -239,12 +255,27 @@ export function Editor() {
           <Sparkles size={15} /> The editor
         </span>
         <h2 className="font-display mt-4 text-4xl font-extrabold tracking-tight md:text-5xl">
-          Upload. <span className="text-lime-deep">AI does the rest.</span>
+          Your photo → a <span className="text-lime-deep">scroll-stopping post.</span>
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-ink-soft">
-          Auto-enhanced the moment you drop a photo. Then fine-tune, transform with a prompt,
-          caption it, and export for any platform — free.
+          Drop a photo and it's enhanced instantly. Then relight it, give it a cinematic grade,
+          change or remove the background, write the caption — and export for any platform. Free.
         </p>
+        {/* step strip */}
+        <div className="mx-auto mt-6 flex max-w-3xl flex-wrap items-center justify-center gap-2 text-left">
+          {STEPS.map((s, i) => (
+            <div key={s.n} className="flex items-center gap-2">
+              <div className="flex items-center gap-2 rounded-full bg-white px-3 py-1.5 shadow-sm">
+                <span className="grid h-5 w-5 place-items-center rounded-full bg-lime text-[11px] font-bold text-ink">
+                  {s.n}
+                </span>
+                <span className="text-xs font-semibold">{s.t}</span>
+                <span className="hidden text-[11px] text-ink-soft sm:inline">· {s.d}</span>
+              </div>
+              {i < STEPS.length - 1 && <span className="text-sage-deep">→</span>}
+            </div>
+          ))}
+        </div>
       </div>
 
       {!original ? (
@@ -258,8 +289,15 @@ export function Editor() {
           <div className="grid h-16 w-16 place-items-center rounded-2xl bg-lime text-ink">
             <Upload size={26} />
           </div>
-          <div className="font-display text-lg font-bold">Drop or choose a photo</div>
-          <div className="text-sm text-ink-soft">jpg / png · auto-enhances instantly · stays local until you use AI</div>
+          <div className="font-display text-xl font-bold">Drop your photo to start</div>
+          <div className="text-sm text-ink-soft">jpg / png · auto-enhances the instant it lands · no account needed</div>
+          <div className="mt-3 flex flex-wrap justify-center gap-1.5">
+            {['✨ Auto-enhance', '🎬 Cinematic', '🌅 Relight', '🏖️ Change background', '✂️ Remove background', '✍️ Caption'].map((t) => (
+              <span key={t} className="rounded-full bg-paper px-2.5 py-1 text-[11px] font-medium text-ink-soft">
+                {t}
+              </span>
+            ))}
+          </div>
         </label>
       ) : (
         <div className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
@@ -267,11 +305,11 @@ export function Editor() {
           <div className="card-soft p-4">
             {afterImg && <BeforeAfter before={original} after={afterImg} />}
             <div className="mt-3 flex flex-wrap items-center gap-2">
-              <button onClick={runBg} disabled={busy} className="btn-ghost inline-flex items-center gap-1.5">
+              <button onClick={runBg} disabled={busy} title="Cut out the background (on-device, free)" className="btn-ghost inline-flex items-center gap-1.5">
                 <Scissors size={14} /> Remove BG
               </button>
               {aiResult && (
-                <button onClick={() => setAiResult(null)} className="btn-ghost inline-flex items-center gap-1.5">
+                <button onClick={() => setAiResult(null)} title="Revert the last AI result" className="btn-ghost inline-flex items-center gap-1.5">
                   <RotateCcw size={14} /> Undo AI
                 </button>
               )}
@@ -280,10 +318,12 @@ export function Editor() {
                   setOriginal(null)
                   baseData.current = null
                 }}
+                title="Start over with a different photo"
                 className="btn-ghost"
               >
                 New image
               </button>
+              <span className="hidden text-[11px] text-ink-soft sm:inline">← drag the slider to compare</span>
               <span className="ml-auto inline-flex items-center gap-1.5 text-sm text-ink-soft">
                 {busy && <Loader2 size={14} className="animate-spin" />}
                 {status}
@@ -314,6 +354,9 @@ export function Editor() {
 
             {tab === 'enhance' && (
               <div className="space-y-4">
+                <p className="text-[13px] text-ink-soft">
+                  Tap a Look for an instant vibe, or fine-tune by hand. All free, instant, on-device.
+                </p>
                 <div>
                   <p className="mb-2 text-xs font-bold uppercase tracking-wide text-ink-soft">Looks</p>
                   <div className="flex flex-wrap gap-1.5">
@@ -360,6 +403,34 @@ export function Editor() {
                     background removal work right now.
                   </p>
                 )}
+
+                <p className="text-[13px] text-ink-soft">
+                  Tap a one-tap style, or build your own below — we write the prompt for you and
+                  re-render the photo.
+                </p>
+
+                {/* one-tap transforms */}
+                <div className="flex flex-wrap gap-1.5">
+                  {QUICK.map((q) => (
+                    <button
+                      key={q.label}
+                      disabled={busy || !canEdit}
+                      onClick={() => {
+                        setRefined(q.prompt)
+                        runTransform(q.prompt)
+                      }}
+                      title={q.prompt}
+                      className="rounded-full bg-sage px-2.5 py-1 text-xs font-semibold text-ink transition hover:bg-sage-deep disabled:opacity-45"
+                    >
+                      {q.emoji} {q.label}
+                    </button>
+                  ))}
+                </div>
+
+                <p className="border-t border-paper pt-3 text-xs font-bold uppercase tracking-wide text-ink-soft">
+                  Or build your own
+                </p>
+
                 {GUIDED.map((g) => (
                   <div key={g.key}>
                     <p className="mb-1.5 text-xs font-bold uppercase tracking-wide text-ink-soft">{g.title}</p>
@@ -394,21 +465,25 @@ export function Editor() {
                 <input
                   value={idea}
                   onChange={(e) => setIdea(e.target.value)}
-                  placeholder="…or describe it in your words (optional)"
+                  placeholder="Describe it: e.g. 'make it golden hour, blur the background'"
                   className="w-full rounded-lg border border-sage-deep px-3 py-2 text-sm outline-none focus:border-lime-deep"
                 />
                 {refined && (
-                  <textarea
-                    value={refined}
-                    onChange={(e) => setRefined(e.target.value)}
-                    rows={2}
-                    className="w-full rounded-lg bg-sage/50 px-3 py-2 text-sm outline-none"
-                  />
+                  <div>
+                    <p className="mb-1 text-[11px] text-ink-soft">✏️ AI prompt — edit before generating if you like:</p>
+                    <textarea
+                      value={refined}
+                      onChange={(e) => setRefined(e.target.value)}
+                      rows={2}
+                      className="w-full rounded-lg bg-sage/50 px-3 py-2 text-sm outline-none"
+                    />
+                  </div>
                 )}
                 <div className="flex gap-2">
                   <button
                     onClick={doRefine}
-                    disabled={busy || !hasKey}
+                    disabled={busy || !hasKey || (!idea && Object.values(choices).every((v) => !v))}
+                    title="Polish your idea + choices into a clear prompt (preview before generating)"
                     className="btn-ghost inline-flex items-center gap-1.5"
                   >
                     <Sparkles size={14} /> Refine
@@ -416,16 +491,24 @@ export function Editor() {
                   <button
                     onClick={() => runTransform()}
                     disabled={busy || !canEdit}
-                    className="btn-lime inline-flex flex-1 items-center justify-center gap-1.5"
+                    title="Re-render the photo with the prompt"
+                    className="btn-lime lift inline-flex flex-1 items-center justify-center gap-1.5"
                   >
                     <Wand2 size={15} /> Generate
                   </button>
                 </div>
+                <p className="text-[11px] text-ink-soft">
+                  Tip: just hit Generate — it auto-writes the prompt from your picks. First render
+                  can take ~15s.
+                </p>
               </div>
             )}
 
             {tab === 'caption' && (
               <div className="space-y-3">
+                <p className="text-[13px] text-ink-soft">
+                  Pick a platform — AI writes a caption, hashtags and alt-text from your photo.
+                </p>
                 <div className="flex gap-1.5">
                   {['instagram', 'x', 'linkedin'].map((p) => (
                     <button
@@ -466,6 +549,9 @@ export function Editor() {
 
             {tab === 'export' && (
               <div className="space-y-3">
+                <p className="text-[13px] text-ink-soft">
+                  Crop to the right size for your platform, then download. PNG, full quality.
+                </p>
                 <p className="text-xs font-bold uppercase tracking-wide text-ink-soft">Size preset</p>
                 <div className="flex flex-wrap gap-1.5">
                   {SIZES.map((s) => (

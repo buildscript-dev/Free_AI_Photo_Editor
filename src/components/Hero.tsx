@@ -124,14 +124,15 @@ export function Hero() {
           {/* social pill */}
           <div className="hero-social absolute left-3 top-1/2 flex -translate-y-1/2 flex-col gap-1 rounded-full bg-gradient-to-b from-lime to-sage-deep p-1.5 shadow-lg sm:left-4">
             {[FB, X, IG].map((Icon, i) => (
-              <a
+              <button
                 key={i}
-                href="#"
-                aria-label="social"
+                onClick={scrollToEditor}
+                aria-label="Try the editor"
+                title="Try the editor"
                 className="grid h-9 w-9 place-items-center rounded-full bg-white/85 text-ink transition hover:scale-105 hover:bg-white"
               >
                 <Icon size={16} />
-              </a>
+              </button>
             ))}
           </div>
 

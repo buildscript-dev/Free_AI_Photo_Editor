@@ -1,8 +1,9 @@
 // In-browser background removal (no server, no quota, no privacy leak).
 // Ports to Flutter as Google ML Kit Subject/Selfie Segmentation.
-import { removeBackground } from '@imgly/background-removal'
+// Lazy-loaded so the ~heavy onnx runtime stays out of the initial bundle.
 
 export async function cutBackground(dataUrl: string): Promise<string> {
+  const { removeBackground } = await import('@imgly/background-removal')
   const blob = await removeBackground(dataUrl)
   return await blobToDataUrl(blob)
 }
