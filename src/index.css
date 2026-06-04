@@ -1,0 +1,144 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-ink: #16181a;
+  --color-ink-soft: #5b6066;
+  --color-lime: #b8e04d;
+  --color-lime-deep: #a5d23a;
+  --color-sage: #e4eed2;
+  --color-sage-deep: #cfe0ad;
+  --color-paper: #ececee;
+  --font-display: 'Poppins', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background: #ececee;
+  color: #16181a;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* ---- components ---- */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  padding: 0.6rem 1.1rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+.glass {
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+.card-soft {
+  background: #fff;
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 40px rgba(20, 24, 26, 0.06);
+}
+
+/* range slider — themed */
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.35);
+  outline: none;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+.range-dark::-webkit-slider-thumb {
+  background: #16181a;
+}
+
+/* hero headline reveal masks */
+.reveal-line {
+  display: block;
+  overflow: hidden;
+}
+.reveal-line > span {
+  display: block;
+}
+
+/* gallery hide scrollbar */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* utility buttons reused in editor */
+.btn-primary {
+  background: #16181a;
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.55rem 1.1rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+.btn-primary:disabled {
+  opacity: 0.4;
+}
+.btn-lime {
+  background: #b8e04d;
+  color: #16181a;
+  border-radius: 999px;
+  padding: 0.55rem 1.1rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+.btn-lime:disabled {
+  opacity: 0.45;
+}
+.btn-ghost {
+  background: #fff;
+  border: 1px solid #e3e4e6;
+  color: #16181a;
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+.btn-ghost:disabled {
+  opacity: 0.45;
+}
